@@ -7,5 +7,7 @@ defmodule TpIascWeb.Router do
 
   scope "/api", TpIascWeb do
     pipe_through :api
+
+    post "/queue", QueueController, :create
   end
 end
