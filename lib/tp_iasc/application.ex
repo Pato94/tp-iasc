@@ -9,9 +9,10 @@ defmodule TpIasc.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      TpIascWeb.Endpoint
+      TpIascWeb.Endpoint,
       # Starts a worker by calling: TpIasc.Worker.start_link(arg)
       # {TpIasc.Worker, arg},
+      TpIasc.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
