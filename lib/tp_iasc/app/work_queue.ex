@@ -2,12 +2,12 @@ defmodule TpIasc.WorkQueue do
   use GenServer
 
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, {[], []}, opts)
+    GenServer.start_link(__MODULE__, %{messageQueue: [], subscriberQueue: []}, opts)
   end
 
-  def init({messageQueue, subscriberQueue}) do
+  def init(_opts) do
     IO.puts("WorkQueue started")
-    {:ok, {messageQueue, subscriberQueue}}
+    {:ok, _opts}
   end
   
   def push(pid, message) do
@@ -18,20 +18,20 @@ defmodule TpIasc.WorkQueue do
 	GenServer.call(pid, :pop)
   end
 
-  def handle_call(:pop, _from, {[], subscriberQueue}) do
-    {:noreply, {[], [subscriberQueue ++ _from]}}
+  def handle_call(:pop, _from, %{messageQueue: [], subscriberQueue: sq}) do
+    {:noreply, %{messageQueue: [], subscriberQueue: [sq ++ _from]}}
   end
   
-  def handle_call(:pop, _from, {[message | messageQueue], subscriberQueue}) do
-    {:reply, message, {messageQueue, subscriberQueue}}
+  def handle_call(:pop, _from, %{[message | mq], sq}) do
+    {:reply, message, %{messageQueue: mq, subscriberQueue: sq}}
   end
 
-  def handle_cast({:push, message}, {messageQueue, []}) do
-    {:noreply, {messageQueue ++ [message], []}}
+  def handle_cast({:push, message}, %{messageQueue: mq, subscriberQueue: []}) do
+    {:noreply, %{messageQueue: mq ++ [message], subscriberQueue: []}}
   end
   
-  def handle_cast({:push, message}, {messageQueue, [subscriber | subscriberQueue]}) do
+  def handle_cast({:push, message}, %{messageQueue: mq, subscriberQueue: [subscriber | sq]}) do
 	send(subscriber, message)
-    {:reply, {messageQueue, subscriberQueue}}
+    {:reply, %{messageQueue: mq, subscriberQueue: sq}}
   end
 end
