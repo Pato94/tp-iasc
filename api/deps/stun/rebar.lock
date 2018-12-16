@@ -1,0 +1,8 @@
+{"1.1.0",
+[{<<"fast_tls">>,{pkg,<<"fast_tls">>,<<"1.0.25">>},0},
+ {<<"p1_utils">>,{pkg,<<"p1_utils">>,<<"1.0.13">>},0}]}.
+[
+{pkg_hash,[
+ {<<"fast_tls">>, <<"CBF875FE709D6FD03D3266C920BFE15F4D22736535D73421300CEBF9D86BD851">>},
+ {<<"p1_utils">>, <<"176577CAFB54A8C2FDC0A7FC62B9A21AB0F66588F4062792CD9E65F3E500BFDB">>}]}
+].
