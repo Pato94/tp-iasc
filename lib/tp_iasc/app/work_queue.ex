@@ -19,10 +19,10 @@ defmodule TpIasc.WorkQueue do
   end
 
   def handle_call(:pop, _from, %{messageQueue: [], subscriberQueue: sq}) do
-    {:noreply, %{messageQueue: [], subscriberQueue: [sq ++ _from]}}
+    {:noreply, %{messageQueue: [], subscriberQueue: sq ++ [_from]}}
   end
   
-  def handle_call(:pop, _from, %{[message | mq], sq}) do
+  def handle_call(:pop, _from, %{messageQueue: [message | mq], subscriberQueue: sq}) do
     {:reply, message, %{messageQueue: mq, subscriberQueue: sq}}
   end
 

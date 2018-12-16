@@ -19,7 +19,7 @@ defmodule TpIasc.BroadcastQueue do
   end
 
   def handle_call(:pop, _from, %{messageQueue: [message | mq], consumer: c}) do
-    {:reply, message, {messageQueue: mq, consumer: nil}}
+    {:reply, message, %{messageQueue: mq, consumer: nil}}
   end
   
   def handle_call(:pop, _from, %{messageQueue: [], consumer: c}) do
@@ -32,6 +32,6 @@ defmodule TpIasc.BroadcastQueue do
   
   def handle_cast({:push, message}, %{messageQueue: mq, consumer: c}) do
 	send(c, message)
-    {:noreply, {messageQueue: mq, consumer: nil}}
+    {:noreply, %{messageQueue: mq, consumer: nil}}
   end
 end
