@@ -47,7 +47,7 @@ defmodule Db.Registry do
     {:reply, :ok, state}
   end
 
-  def handle_call(_msg, _from, state) do
-    {:reply, :ok, state}
+  def handle_cast(_msg, _from, state) do
+    {:noreply, state}
   end
 end
