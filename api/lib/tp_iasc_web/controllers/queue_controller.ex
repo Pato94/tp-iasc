@@ -16,9 +16,11 @@ defmodule TpIascWeb.QueueController do
     message = Map.get(params, "message", "")
     case Map.get(params, "id", -1) do
     	-1 -> conn
-    			|> put_flash(:error, "Didn't input a queue")
-    			|> text("error")
-    	id -> TpIasc.Supervisor.get_queue(id).push(message) # cerrar conexion
+    		  	|> put_flash(:error, "Didn't input a queue")
+    		  	|> text("error")
+    	id -> TpIasc.Supervisor.get_queue(id).push(message)
+            conn
+              |> text("ok")
     end
   end
 end
