@@ -18,6 +18,12 @@ defmodule Db.Storage do
     {:reply, Map.fetch(state.messages, id), %{messages: new_state}}
   end
 
+  # TODO: Delete
+  def handle_call(:ack, _from, state) do
+    IO.puts "YEAAAHHH"
+    {:reply, :ok, state}
+  end
+
   def handle_call(_msg, _from, state) do
     {:reply, :ok, state}
   end
