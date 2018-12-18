@@ -15,6 +15,7 @@ defmodule Db.Registry do
     case GenServer.start_link(__MODULE__, @initial_state, name: @name) do
       {:ok, pid} ->
         Logger.debug "Started #{__MODULE__} master"
+        Db.Endpoint.start_link([])
         {:ok, pid}
       {:error, {:already_started, pid}} ->
         Logger.debug "Started #{__MODULE__} slave"
