@@ -10,8 +10,8 @@ defmodule Db.Application do
     children = [
       # Starts a worker by calling: Db.Worker.start_link(arg)
       # {Db.Worker, arg},
-      Db.Registry,
-      Db.Storage
+      Db.Storage,
+      Db.Registry
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
