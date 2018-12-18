@@ -35,13 +35,14 @@ defmodule Api.WorkQueue do
     end
   end
 
+  def handle_cast(_msg, state) do
+    Logger.debug "WorkQueue: unknown cast received"
+    {:noreply, state}
+  end
+
   def handle_call(_msg, _from, state) do
     Logger.debug "WorkQueue: unknown call received"
     {:reply, :ok, state}
   end
 
-  def handle_cast(_msg, state) do
-    Logger.debug "WorkQueue: unknown cast received"
-    {:noreply, state}
-  end
 end

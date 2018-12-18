@@ -20,7 +20,7 @@ defmodule ApiWeb.QueueController do
     	-1 -> conn
     		  	|> put_flash(:error, "Didn't input a queue")
     		  	|> text("error")
-    	id -> TpIasc.Supervisor.get_queue(id).push(message)
+    	id -> Api.Supervisor.get_queue(id).push(message)
             conn
               |> text("ok")
     end
