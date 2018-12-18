@@ -55,21 +55,130 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("queue:1", {})
-let chatInput = document.querySelector("#chat-input")
-let messagesContainer = document.querySelector("#messages")
+let channel = socket.channel("queue:lobby", {})
+// let chatInput = document.querySelector("#chat-input")
+// let messagesContainer = document.querySelector("#messages")
+let queuesContainer = document.querySelector("#queues-container")
 
-chatInput.addEventListener("keypress", event => {
-  if(event.keyCode === 13){
-    channel.push("new_msg", {queue_id: 1, body: chatInput.value})
-    chatInput.value = ""
+function htmlToElement(html) {
+  const template = document.createElement('template');
+  html = html.trim(); // Never return a text node of whitespace as the result
+  template.innerHTML = html;
+  return template.content.firstChild;
+}
+
+// channel.on("new_msg", payload => {
+//   let messageItem = document.createElement("li")
+//   messageItem.innerText = `[${Date()}] ${payload.body}`
+//   messagesContainer.appendChild(messageItem)
+// })
+
+const createWorkQueue = (queueId) => {
+  const element = htmlToElement(`
+    <div id="queue-${queueId}">
+        <h2>Queue ${queueId} - Tipo WorkQueue</h2>
+        <table>
+        <tr>
+        <td>
+            <h2>Consumers</h2>
+            <div id="consumers-${queueId}">
+            </div>
+            <button id="new-consumer-${queueId}">Click to add a consumer</button>
+        </td>
+        <td>
+            <h2>Producers</h2>
+            <div id="producers-${queueId}">
+            </div>
+            <button id="new-producer-${queueId}">Click to add a producer</button>
+        </td>
+        </tr>
+        </table>
+    </div>
+  `)
+
+  const createConsumer = (consumerId) => {
+    // TODO: Setup socket connection
+
+    const element = htmlToElement(`
+      <div id="consumer-${queueId}-${consumerId}">
+          <h3>Consumer</h3>
+          <div id="consumer-messages-${queueId}-${consumerId}">
+          </div>
+      </div>
+    `)
+
+    let channel = socket.channel(`queue:${queueId}:consumer:${consumerId}`, {})
+    let messagesContainer = element.querySelector(`#consumer-messages-${queueId}-${consumerId}`)
+
+    channel.on("new_msg", payload => {
+      let messageItem = document.createElement("li")
+      messageItem.innerText = `${payload.body}`
+      messagesContainer.appendChild(messageItem)
+    })
+
+    channel.join()
+      .receive("ok", resp => { console.log("Joined successfully", resp) })
+      .receive("error", resp => { console.log("Unable to join", resp) })
+
+    return element
   }
-})
 
-channel.on("new_msg", payload => {
-  let messageItem = document.createElement("li")
-  messageItem.innerText = `[${Date()}] ${payload.body}`
-  messagesContainer.appendChild(messageItem)
+  const createProducer = (producerId) => {
+    // TODO: Setup socket connection
+    const element = htmlToElement(`
+      <div id="producer-${queueId}-${producerId}">
+          <h3>Producer</h3>
+          <div id="producer-messages-${queueId}-${producerId}">
+          </div>
+          <input id="chat-input-${queueId}-${producerId}" type="text"/>
+      </div>
+    `)
+
+    let channel = socket.channel(`queue:${queueId}:producer:${producerId}`, {})
+    let chatInput = element.querySelector(`#chat-input-${queueId}-${producerId}`)
+
+    chatInput.addEventListener("keypress", event => {
+      if(event.keyCode === 13){
+        channel.push("new_msg", {queue_id: queueId, body: chatInput.value})
+        chatInput.value = ""
+      }
+    })
+
+    channel.join()
+      .receive("ok", resp => { console.log("Joined successfully", resp) })
+      .receive("error", resp => { console.log("Unable to join", resp) })
+
+    return element
+  }
+
+  let nextConsumerId = 1
+  let nextProducerId = 1
+
+  const consumersContainer = element.querySelector(`#consumers-${queueId}`)
+  const addConsumer = element.querySelector(`#new-consumer-${queueId}`)
+  addConsumer.addEventListener("click", event => {
+    const newConsumer = createConsumer(nextConsumerId)
+    consumersContainer.appendChild(newConsumer)
+    nextConsumerId++
+  })
+
+  const producersContainer = element.querySelector(`#producers-${queueId}`)
+  const addProducer = element.querySelector(`#new-producer-${queueId}`)
+  addProducer.addEventListener("click", event => {
+    const newProducer = createProducer(nextProducerId)
+    producersContainer.appendChild(newProducer)
+    nextProducerId++
+  })
+
+  return element
+}
+
+const addWorkQueue = document.querySelector("#new-worker-queue")
+let nextQueueId = 1
+addWorkQueue.addEventListener("click", event => {
+  channel.push("new_queue", {queue_id: nextQueueId})
+  queuesContainer.appendChild(createWorkQueue(nextQueueId))
+  nextQueueId++
 })
 
 channel.join()

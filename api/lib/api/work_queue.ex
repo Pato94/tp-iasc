@@ -14,6 +14,7 @@ defmodule Api.WorkQueue do
   end
 
   def handle_cast({:subscribe, pid}, state = %{id: id, consumers: consumers, pending: pending}) do
+    Logger.debug "WorkQueue, subscribe received!"
     if pending > 0 do
       message = Api.DbClient.pop(id)
       GenServer.cast(pid, {:consume, self(), message})

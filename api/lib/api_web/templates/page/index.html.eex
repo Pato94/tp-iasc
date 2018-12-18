@@ -1,40 +1,64 @@
+<!--
 <section class="phx-hero">
   <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
   <p>A productive web framework that<br/>does not compromise speed and maintainability.</p>
 </section>
+-->
 
-<section class="row">
-  <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.4/CHANGELOG.md">v1.4 Changelog</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-    </ul>
-  </article>
-</section>
 <section>
-    <h2>Messages</h2>
+    <h2>Mensajes</h2>
+    <!--
     <div id="messages"></div>
-    <input id="chat-input" type="text"></input>
+    <input id="chat-input" type="text"/>
+    -->
+    <div id="queues-container">
+    <!--
+        <div id="queue-1">
+        <h2>Queue 1 - Tipo WorkQueue</h2>
+        <table>
+        <tr>
+        <td>
+            <h2>Consumers</h2>
+            <div id="consumers-1">
+            <div id="consumer-1-1">
+                <h3>Consumer</h3>
+                <div id="consumer-messages-1-1">
+                </div>
+            </div>
+            </div>
+            <button id="new-consumer-1">Click to add a consumer</button>
+        </td>
+        <td>
+            <h2>Producers</h2>
+            <div id="producers-1">
+            <div id="producer-1-1">
+                <h3>Producer</h3>
+                <div id="producer-messages-1-1">
+                </div>
+                <input id="chat-input-1-1" type="text"/>
+            </div>
+            </div>
+            <button id="new-producer-1">Click to add a producer</button>
+        </td>
+        </tr>
+        </table>
+        </div>
+
+        <div id="messages-1">
+        </div>
+        -->
+    </div>
+    <div id="actions">
+    <h2>Actions</h2>
+        <table>
+        <tr>
+        <td>
+            <button id="new-worker-queue">Add a worker queue!</button>
+        </td>
+        <td>
+            <button id="new-broadcast-queue">Add a broadcast queue!</button>
+        </td>
+        </tr>
+        </table>
+    </div>
 </section>

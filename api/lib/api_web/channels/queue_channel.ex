@@ -1,9 +1,16 @@
 defmodule ApiWeb.QueueChannel do
   use Phoenix.Channel
+  require Logger
+
+  def join("queue:lobby", _message, socket) do
+    {:ok, socket}
+  end
 
   def join("queue:" <> queue_id, _message, socket) do
     {id, _} = Integer.parse(queue_id)
-    send(self(), {:after_join, id})
+    if (String.contains?(queue_id, "consumer")) do
+      send(self(), {:after_join, id})
+    end
     {:ok, socket}
   end
 
@@ -17,6 +24,12 @@ defmodule ApiWeb.QueueChannel do
   def handle_in("new_msg", %{"queue_id" => queue_id, "body" => body}, socket) do
     {:ok, queue} = Api.Registry.get_queue(Api.Registry, queue_id)
     GenServer.cast(queue, {:process, body})
+    {:noreply, socket}
+  end
+
+  def handle_in("new_queue", %{"queue_id" => queue_id}, socket) do
+    Logger.debug "New worker queue created"
+    Api.Registry.new_worker_queue(Api.Registry)
     {:noreply, socket}
   end
 end
