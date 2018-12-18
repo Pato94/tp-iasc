@@ -11,8 +11,9 @@ defmodule Api.SocketConsumer do
   end
 
   def handle_cast({:consume, from, message}, state = %{socket: socket}) do
+    Logger.debug "Consume called, socket: #{inspect(socket)}"
+    Process.sleep(1000)
     Phoenix.Channel.push(socket, "new_msg", %{body: message})
-    # TODO: Delay?
     GenServer.cast(from, {:subscribe, self()})
     {:noreply, state}
   end
