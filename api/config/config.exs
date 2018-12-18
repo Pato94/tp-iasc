@@ -8,11 +8,11 @@
 use Mix.Config
 
 # Configures the endpoint
-config :tp_iasc, TpIascWeb.Endpoint,
+config :api, ApiWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "ILUXIuzYfCIs1n2ssnsgvce9gQ5/zHS7Nf6Qq5MY8E2omitmDybuT/ZKPrzgNSrD",
-  render_errors: [view: TpIascWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: TpIasc.PubSub, adapter: Phoenix.PubSub.PG2]
+  secret_key_base: "PlXeei0M7ABRF6C2pWa4kl+iKcyWFJBVgz1858VgPqtNcEi1cdBy7ijjkQEAQDKb",
+  render_errors: [view: ApiWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Api.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,

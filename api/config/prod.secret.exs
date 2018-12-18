@@ -8,5 +8,5 @@ use Mix.Config
 # file or create a script for recreating it, since it's
 # kept out of version control and might be hard to recover
 # or recreate for your teammates (or yourself later on).
-config :tp_iasc, TpIascWeb.Endpoint,
-  secret_key_base: "r/8mH7fy/epLYIDvhtxqcMx8Xb41lAOwCr0IoJJTuqa2p76GGkrP3bsU6wpSIMzH"
+config :api, ApiWeb.Endpoint,
+  secret_key_base: "dUxfELxw0V45O5K70oEmf6W5vAJPBr4nSOv61/kqcMMZ4XW6AOsKQYASAh3sTxhU"

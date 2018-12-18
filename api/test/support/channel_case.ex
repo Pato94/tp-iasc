@@ -1,4 +1,4 @@
-defmodule TpIascWeb.ChannelCase do
+defmodule ApiWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,7 +21,7 @@ defmodule TpIascWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint TpIascWeb.Endpoint
+      @endpoint ApiWeb.Endpoint
     end
   end
 
