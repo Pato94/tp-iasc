@@ -27,9 +27,14 @@ defmodule ApiWeb.QueueChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new_queue", %{"queue_id" => queue_id}, socket) do
-    Logger.debug "New worker queue created"
-    Api.Registry.new_worker_queue(Api.Registry)
+  def handle_in("new_queue", %{"queue_id" => queue_id, "broadcast" => broadcast}, socket) do
+    if broadcast do
+      Logger.debug "New broadcast queue created"
+      Api.Registry.new_broadcast_queue(Api.Registry)
+    else
+      Logger.debug "New worker queue created"
+      Api.Registry.new_worker_queue(Api.Registry)
+    end
     {:noreply, socket}
   end
 end
