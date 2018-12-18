@@ -12,16 +12,17 @@ defmodule Db.Registry do
   }
 
   def start_link(state) do
-    case GenServer.start_link(__MODULE__, @initial_state, name: @name) do
+    result = case GenServer.start_link(__MODULE__, @initial_state, name: @name) do
       {:ok, pid} ->
         Logger.debug "Started #{__MODULE__} master"
         Db.Endpoint.start_link([])
         {:ok, pid}
       {:error, {:already_started, pid}} ->
         Logger.debug "Started #{__MODULE__} slave"
-        GenServer.call({:global, Db.Registry}, {:register, {Db.Storage, Node.self()}})
         {:ok, pid}
     end
+    GenServer.call({:global, Db.Registry}, {:register, {Db.Storage, Node.self()}})
+    result
   end
 
   def init(args) do
@@ -84,7 +85,7 @@ defmodule Db.Registry do
   end
 
   def handle_call({:register, pid}, _from, state) do
-    Logger.debug "Register received from slave"
+    Logger.debug "Register received from store"
     GenServer.call(pid, :ack)
     {:reply, :ok, %{state | storages: state.storages ++ [pid]}}
   end
