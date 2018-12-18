@@ -9,7 +9,7 @@ defmodule Db.Endpoint do
   end
 
   def start_link(_opts),
-      do: Plug.Cowboy.http(__MODULE__, [])
+      do: Plug.Cowboy.http(__MODULE__, [], port: 4001)
 
   plug(
     Plug.Parsers,

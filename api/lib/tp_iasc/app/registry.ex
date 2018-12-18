@@ -2,7 +2,7 @@ defmodule TpIasc.Registry do
   use GenServer
 
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, %{}, opts)
+    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
   def init(_opts) do
