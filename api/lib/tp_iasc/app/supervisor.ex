@@ -14,14 +14,14 @@ defmodule TpIasc.Supervisor do
     Supervisor.init(children, strategy: :one_for_all)
   end
 
-  def create_broadcast_queue do
-    {:ok, queue} = DynamicSupervisor.start_child(TpIasc.QueueSupervisor, TpIasc.BroadcastQueue)
-    TpIasc.Registry.store_new(TpIasc.Registry, queue)
+  def create_broadcast_queue(id) do
+    {:ok, queue} = DynamicSupervisor.start_child(TpIasc.QueueSupervisor, {TpIasc.BroadcastQueue, id: id})
+    queue
   end
 
-  def create_worker_queue do
-    {:ok, queue} = DynamicSupervisor.start_child(TpIasc.QueueSupervisor, TpIasc.WorkQueue)
-    TpIasc.Registry.store_new(TpIasc.Registry, queue)
+  def create_worker_queue(id) do
+    {:ok, queue} = DynamicSupervisor.start_child(TpIasc.QueueSupervisor, {TpIasc.WorkQueue, id: id})
+    queue
   end
 
   def get_queue(id) do

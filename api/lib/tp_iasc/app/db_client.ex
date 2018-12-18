@@ -12,6 +12,7 @@ defmodule TpIasc.DbClient do
     Logger.debug "popping message, id: #{id}"
     {:ok, response} = HTTPoison.get "localhost:4001/pop/#{id}"
     Logger.debug "response: #{inspect(response.body)}"
-    Jason.decode!(response.body)
+    %{"message" => message} = Jason.decode!(response.body)
+    message
   end
 end

@@ -4,22 +4,34 @@ defmodule TpIasc.WorkQueue do
   require Logger
 
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, %{}, opts)
+    [id: id] = opts
+    GenServer.start_link(__MODULE__, %{id: id, pending: 0, consumers: []}, opts)
   end
 
-  def init(_opts) do
-    IO.puts("WorkQueue started")
-    {:ok, %{}}
+  def init(args) do
+    Logger.debug "WorkQueue started"
+    {:ok, args}
   end
 
-  def handle_call({:push, id, message}, _from, state) do
-    response = TpIasc.DbClient.push(id, message)
-    {:reply, :ok, state}
+  def handle_cast({:subscribe, pid}, state = %{id: id, consumers: consumers, pending: pending}) do
+    if pending > 0 do
+      message = TpIasc.DbClient.pop(id)
+      GenServer.cast(pid, {:consume, self(), message})
+      {:noreply, %{state | pending: pending - 1}}
+    else
+      {:noreply, %{state | consumers: consumers ++ [pid]}}
+    end
   end
 
-  def handle_call({:pop, id}, _from, state) do
-    %{"message" => message} = TpIasc.DbClient.pop(id)
-    {:reply, message, state}
+  def handle_cast({:process, message}, state = %{id: id, consumers: consumers, pending: pending}) do
+    if Enum.empty?(consumers) do
+      TpIasc.DbClient.push(id, message)
+      {:noreply, %{state | pending: pending + 1}}
+    else
+      [head | tail] = consumers
+      GenServer.cast(head, {:consume, self(), message})
+      {:noreply, %{state | consumers: tail}}
+    end
   end
 
   def handle_call(_msg, _from, state) do

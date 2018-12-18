@@ -3,8 +3,10 @@ defmodule TpIascWeb.QueueController do
 
   def create(conn, params) do
     id = case Map.get(params, "broadcast", false) do
-    	true ->  TpIasc.Supervisor.create_broadcast_queue
-    	false -> TpIasc.Supervisor.create_worker_queue
+    	true ->
+        TpIasc.Registry.new_broadcast_queue(TpIasc.Registry)
+    	false ->
+        TpIasc.Registry.new_worker_queue(TpIasc.Registry)
     end
 
     conn
